@@ -2,14 +2,27 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        stage('Check') {
             steps {
-                echo "Hello Razan! Jenkinsfile is working 🎉"
+                echo "Hello Razan! Jenkinsfile is running 🚀"
             }
         }
-        stage('Build') {
+
+        stage('Build Docker Image') {
             steps {
-                echo "Building Flask App..."
+                script {
+                    sh 'docker build -t flask-ci-cd-app .'
+                }
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                script {
+                    // Stop & remove any running container with same name
+                    sh 'docker rm -f flask-ci-cd-container || true'
+                    sh 'docker run -d -p 5000:5000 --name flask-ci-cd-container flask-ci-cd-app'
+                }
             }
         }
     }
