@@ -1,9 +1,15 @@
 pipeline {
     agent any
+
     stages {
-        stage('Test') {
+        stage('Hello') {
             steps {
-                echo 'Hello Razan! Jenkinsfile is being executed 🚀'
+                echo "Hello Razan! Jenkinsfile is working 🎉"
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "Building Flask App..."
             }
         }
     }
