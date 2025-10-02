@@ -2,6 +2,14 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout Source') {
+            steps {
+                // This ensures the full repo is cloned into the workspace
+                checkout scm
+                echo " Source code checked out successfully"
+            }
+        }
+
         stage('Check') {
             steps {
                 echo "Hello Razan! Jenkinsfile is running 🚀"
