@@ -2,23 +2,17 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout Source') {
+        stage('Checkout') {
             steps {
-                // This ensures the full repo is cloned into the workspace
-                checkout scm
-                echo " Source code checked out successfully"
-            }
-        }
-
-        stage('Check') {
-            steps {
-                echo "Hello Razan! Jenkinsfile is running 🚀"
+                git branch: 'main',
+                    url: 'https://github.com/razanmujawar2211-create/ci-cd-flask-app.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
+                    echo "Building Docker image..."
                     sh 'docker build -t flask-ci-cd-app .'
                 }
             }
@@ -27,7 +21,7 @@ pipeline {
         stage('Run Container') {
             steps {
                 script {
-                    // Stop & remove any running container with same name
+                    echo "Running container..."
                     sh 'docker rm -f flask-ci-cd-container || true'
                     sh 'docker run -d -p 5000:5000 --name flask-ci-cd-container flask-ci-cd-app'
                 }
