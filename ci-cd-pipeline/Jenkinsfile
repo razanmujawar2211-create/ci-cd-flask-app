@@ -4,27 +4,24 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/razanmujawar2211-create/ci-cd-flask-app.git'
+                git url: 'https://github.com/razanmujawar2211-create/ci-cd-flask-app.git', branch: 'main'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    echo "Building Docker image..."
-                    sh 'docker build -t flask-ci-cd-app .'
-                }
+                echo "Building Docker image..."
+                sh 'docker build -t flask-ci-cd-app .'
             }
         }
 
         stage('Run Container') {
             steps {
-                script {
-                    echo "Running container..."
-                    sh 'docker rm -f flask-ci-cd-container || true'
-                    sh 'docker run -d -p 5000:5000 --name flask-ci-cd-container flask-ci-cd-app'
-                }
+                echo "Running Flask container..."
+                sh '''
+                    docker rm -f flask-ci-cd-container || true
+                    docker run -d -p 5000:5000 --name flask-ci-cd-container flask-ci-cd-app
+                '''
             }
         }
     }
