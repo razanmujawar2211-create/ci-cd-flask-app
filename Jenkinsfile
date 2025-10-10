@@ -45,9 +45,9 @@ pipeline {
             steps {
                 echo 'Deploying container...'
                 sh '''
-                    docker stop flask-ci-cd-app || true
-                    docker rm flask-ci-cd-app || true
-                    docker run -d --name flask-ci-cd-app -p 5000:5000 $DOCKER_IMAGE
+                    docker stop flask-ci-cd-container || true
+                    docker rm flask-ci-cd-container || true
+                    docker run -d --name flask-ci-cd-container -p 5000:5000 $DOCKER_IMAGE
                 '''
             }
         }
