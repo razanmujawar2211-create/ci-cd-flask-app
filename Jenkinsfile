@@ -15,43 +15,41 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-    steps {
-        echo 'Running code quality analysis using SonarQube...'
-        withSonarQubeEnv('SonarQube') {
-            script {
-                def scannerHome = tool 'SonarScanner' // <-- use exact name from Jenkins Tools
-                sh """
-                ${scannerHome}/bin/sonar-scanner \
-                -Dsonar.projectKey=flask-ci-cd \
-                -Dsonar.sources=. \
-                -Dsonar.host.url=http://sonarqube:9000 \
-                -Dsonar.token=$SONARQUBE
-                """
+            steps {
+                echo 'Running code quality analysis using SonarQube...'
+                withSonarQubeEnv('SonarQube') {
+                    script {
+                        def scannerHome = tool 'SonarScanner' // <-- use exact name from Jenkins Tools
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=flask-ci-cd \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://sonarqube:9000 \
+                        -Dsonar.token=$SONARQUBE
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo '🐳 Building Docker image...'
+                sh "docker build -t ${DOCKER_IMAGE} -f Dockerfile ."
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                echo 'Deploying container...'
+                sh '''
+                    docker stop flask-ci-cd-app || true
+                    docker rm flask-ci-cd-app || true
+                    docker run -d --name flask-ci-cd-app -p 5000:5000 flask-ci-cd-app:latest
+                '''
             }
         }
     }
-}
-
-
-        stage('Build Docker Image') {
-    steps {
-        echo '🐳 Building Docker image...'
-        sh "docker build -t ${DOCKER_IMAGE} -f Dockerfile ."
-    }
-}
-
-
-        stage('Deploy Container') {
-    steps {
-        echo 'Deploying container...'
-        sh '''
-            docker stop flask-ci-cd-app || true
-            docker rm flask-ci-cd-app || true
-            docker run -d --name flask-ci-cd-app -p 5000:5000 flask-ci-cd-app:latest
-        '''
-    }
-}
-
 
     post {
         success {
