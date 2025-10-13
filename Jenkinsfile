@@ -41,6 +41,13 @@ pipeline {
             }
         }
 
+	stage('Verify Docker Access') {
+    		steps {
+        		sh 'docker version'
+    			}
+		}
+
+
         stage('Deploy Container') {
             steps {
                 echo 'Deploying container...'
