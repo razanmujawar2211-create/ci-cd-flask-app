@@ -24,7 +24,7 @@ pipeline {
 			${scannerHome}/bin/sonar-scanner \
   			-Dsonar.projectKey=flask-ci-cd \
   			-Dsonar.sources=./ \
-  			-Dsonar.host.url=http://sonarqube:9000 \
+  			-Dsonar.host.url=http://host.docker.internal:9000 \
   			-Dsonar.token=$SONARQUBE \
   			-Dsonar.projectBaseDir=$WORKSPACE
 			"""
