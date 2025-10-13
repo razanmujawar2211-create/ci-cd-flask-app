@@ -20,13 +20,15 @@ pipeline {
                 withSonarQubeEnv('SonarQube') {
                     script {
                         def scannerHome = tool 'SonarScanner' // <-- use exact name from Jenkins Tools
-                        sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=flask-ci-cd \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://sonarqube:9000 \
-                        -Dsonar.token=$SONARQUBE
-                        """
+                       sh """
+			${scannerHome}/bin/sonar-scanner \
+  			-Dsonar.projectKey=flask-ci-cd \
+  			-Dsonar.sources=./ \
+  			-Dsonar.host.url=http://sonarqube:9000 \
+  			-Dsonar.token=$SONARQUBE \
+  			-Dsonar.projectBaseDir=$WORKSPACE
+			"""
+
                     }
                 }
             }
